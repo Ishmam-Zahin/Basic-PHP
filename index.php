@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <form action="insert.php" method="post" class="data_form grid_item_1">
+    <form action="dbInsertData.php" method="post" class="data_form grid_item_1">
         <div class="fitem_1">
             <label id="i_1">First Name: </label>
             <input type="text" name="fname" id="i_1" required><br>
@@ -24,12 +24,12 @@
         <div class="fitem_2">
             <label id="i_3">Choose Gender: </label>
             <select id="i_3" name="gender">
-                <option value="Male" selected>Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
+                <option value="male" selected>Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
             </select><br>
             <label id="i_4">Birth Date</label>
-            <input type="date" id="i_4" name="bDate" required>
+            <input type="date" id="i_4" name="birth_date" required>
         </div>
         <div class="fitem_3">
             <label id="i_5">About Yourself</label><br>
@@ -39,15 +39,14 @@
     </form>
 
     <?php
-        $data = file_get_contents("data.json");
-        $data_arr = json_decode($data, true);
+        require_once 'dbGetData.php';
 
         if(!empty($_GET)){
             $index = $_GET["id"] - 1;
 
             echo "
-                <form action=\"update.php\" method=\"post\" class=\"data_form grid_item_2\">
-                    <input type=\"hidden\" name=\"id\" value=\"$index\">
+                <form action=\"dbUpdateData.php\" method=\"post\" class=\"data_form grid_item_2\">
+                    <input type=\"hidden\" name=\"id\" value=\"".$data_arr[$index]["id"]."\">
                     <div class=\"fitem_1\">
                         <label id=\"i_1\">First Name: </label>
                         <input type=\"text\" name=\"fname\" id=\"i_1\" required value=\"".$data_arr[$index]["fname"]."\"><br>
@@ -57,12 +56,12 @@
                     <div class=\"fitem_2\">
                         <label id=\"i_3\">Choose Gender: </label>
                         <select id=\"i_3\" name=\"gender\">
-                            <option value=\"Male\" ".($data_arr[$index]["gender"] == "Male"? "selected" : "").">Male</option>
-                            <option value=\"Female\" ".($data_arr[$index]["gender"] == "Female"? "selected" : "").">Female</option>
-                            <option value=\"Other\" ".($data_arr[$index]["gender"] == "Other"? "selected" : "").">Other</option>
+                            <option value=\"male\" ".($data_arr[$index]["gender"] == "male"? "selected" : "").">Male</option>
+                            <option value=\"female\" ".($data_arr[$index]["gender"] == "female"? "selected" : "").">Female</option>
+                            <option value=\"other\" ".($data_arr[$index]["gender"] == "other"? "selected" : "").">Other</option>
                         </select><br>
                         <label id=\"i_4\">Birth Date</label>
-                        <input type=\"date\" id=\"i_4\" name=\"bDate\" required value=\"".$data_arr[$index]["bDate"]."\">
+                        <input type=\"date\" id=\"i_4\" name=\"birth_date\" required value=\"".$data_arr[$index]["birth_date"]."\">
                     </div>
                     <div class=\"fitem_3\">
                         <label id=\"i_5\">About Yourself</label><br>
@@ -99,11 +98,11 @@
                 <div class=\"info_container\">
                     <div class=\"info\">
                         <h3>$i: <i>".$data_arr[$i-1]["fname"]." ".$data_arr[$i-1]["lname"]."</i></h3>
-                        <p><b>Birth Date:</b> ".$data_arr[$i-1]["bDate"]." <b>Gender:</b> ".$data_arr[$i-1]["gender"]."</p>
+                        <p><b>Birth Date:</b> ".$data_arr[$i-1]["birth_date"]." <b>Gender:</b> ".$data_arr[$i-1]["gender"]."</p>
                     </div>
                     <div class=\"action\">
                         <button onclick=\"show(this, $i)\">$drop_down_icon</button>
-                        <a href=\"delete.php?id=$i\">$delete_icon</a>
+                        <a href=\"dbDeleteData.php?id=".$data_arr[$i-1]["id"]."\">$delete_icon</a>
                         <a href=\"index.php?id=$i\">$edit_icon</a>
                     </div>
                 </div>
